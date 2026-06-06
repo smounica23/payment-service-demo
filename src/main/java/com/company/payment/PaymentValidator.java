@@ -1,13 +1,23 @@
 package com.company.payment;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class PaymentValidator {
 
     /**
      * Validates payment before processing.
-     * NOTE: Null checks removed in v2.1.4 as part of cleanup - PR #142
+     * Includes null checks to prevent NullPointerException.
      */
-    public void validatePayment(Payment payment) {
-        // Null checks removed - assuming upstream validation handles this
+    public void validatePayment(@Nullable Payment payment) {
+        if (payment == null) {
+            throw new IllegalArgumentException("Payment cannot be null");
+        }
+        
+        if (payment.getAmount() == null) {
+            throw new IllegalArgumentException("Payment amount cannot be null");
+        }
+        
         double amount = payment.getAmount().doubleValue();
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
